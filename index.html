@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutorial File Manajemen - Praktik TKJ</title>
+</head>
+<body>
+
+  <header>
+    <h1>Tutorial Praktik TKJ: File Manajemen Windows</h1>
+    <p>Panduan mengelola folder dan berkas melalui File Explorer (GUI) dan Command Prompt (CLI).</p>
+    <hr>
+  </header>
+
+  <section>
+    <h2>1. File Manajemen Menggunakan File Explorer (GUI)</h2>
+    <ol>
+      <li>Tekan tombol <b>Windows + E</b> untuk membuka jendela <b>File Explorer</b>.</li>
+      <li>Pilih drive penyimpanan (misalnya <b>Local Disk (D:)</b>).</li>
+      <li>Tekan <b>Ctrl + Shift + N</b> untuk membuat folder baru, lalu beri nama <code>Praktik_TKJ</code>.</li>
+      <li>Gunakan pintasan keyboard berikut untuk mengelola file:</li>
+    </ol>
+    <ul>
+      <li><code>Ctrl + C</code> : Menyalin (Copy) file atau folder.</li>
+      <li><code>Ctrl + X</code> : Memindahkan (Cut) file atau folder.</li>
+      <li><code>Ctrl + V</code> : Menempelkan (Paste) hasil salinan/pindahan.</li>
+      <li><code>F2</code> : Mengubah nama (Rename) file atau folder.</li>
+      <li><code>Delete</code> : Menghapus file atau folder ke Recycle Bin.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2. File Manajemen Menggunakan Command Prompt (CLI)</h2>
+    <p>Buka <b>CMD</b> (Windows + R -> ketik <code>cmd</code>), lalu gunakan perintah dasar berikut:</p>
+    <pre>
+D:                        (Pindah ke drive D)
+mkdir Praktik_TKJ         (Membuat folder baru bernama Praktik_TKJ)
+cd Praktik_TKJ            (Masuk ke dalam folder Praktik_TKJ)
+dir                       (Menampilkan daftar isi folder)
+copy tugas.txt backup.txt (Menyalin file tugas.txt menjadi backup.txt)
+del backup.txt            (Menghapus file backup.txt)
+cd ..                     (Kembali ke folder sebelumnya)
+rmdir Praktik_TKJ         (Menghapus folder kosong)
+    </pre>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Form Pertanyaan / Komentar</h2>
+    <form id="formKomentar">
+      <label>Nama Siswa:</label><br>
+      <input type="text" id="nama" placeholder="Masukkan nama" required><br><br>
+      <label>Pertanyaan / Catatan:</label><br>
+      <textarea id="pesan" rows="3" placeholder="Tulis pertanyaan..." required></textarea><br><br>
+      <button type="submit">Kirim</button>
+    </form>
+    <p id="status"></p>
+
+    <h3>Daftar Komentar Masuk:</h3>
+    <ul id="daftarKomentar">
+      <li>Memuat komentar...</li>
+    </ul>
+  </section>
+
+  <footer>
+    <hr>
+    <p>&copy; 2026 Modul Praktik TKJ</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'URL_SUPABASE_KAMU';
+    const supabaseKey = 'ANON_KEY_SUPABASE_KAMU';
+    const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function muatKomentar() {
+      const daftarEl = document.getElementById('daftarKomentar');
+      const { data, error } = await db.from('komentar').select('*').order('id', { ascending: false });
+
+      if (error) { daftarEl.innerHTML = '<li>Error: ' + error.message + '</li>'; return; }
+      if (data.length === 0) { daftarEl.innerHTML = '<li>Belum ada komentar.</li>'; return; }
+
+      daftarEl.innerHTML = '';
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<b>${item.nama}</b>: ${item.pesan}`;
+        daftarEl.appendChild(li);
+      });
+    }
+
+    document.getElementById('formKomentar').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const namaInput = document.getElementById('nama').value;
+      const pesanInput = document.getElementById('pesan').value;
+      const statusTeks = document.getElementById('status');
+
+      statusTeks.innerText = "Mengirim data...";
+      const { error } = await db.from('komentar').insert([{ nama: namaInput, pesan: pesanInput }]);
+
+      if (error) {
+        statusTeks.innerText = "Gagal mengirim: " + error.message;
+      } else {
+        statusTeks.innerText = "Berhasil! Komentar tersimpan.";
+        document.getElementById('formKomentar').reset();
+        muatKomentar();
+      }
+    });
+
+    muatKomentar();
+  </script>
+
+</body>
+      </html>
