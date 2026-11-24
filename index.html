@@ -2,71 +2,523 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tutorial File Manajemen - Praktik TKJ</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-color: #090d16;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --purple-neon: #a855f7;
+      --blue-neon: #3b82f6;
+      --cyan-green-neon: #10b981;
+      --cyan-light: #06b6d4;
+      
+      --gradient-main: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #10b981 100%);
+      --gradient-text: linear-gradient(90deg, #c084fc, #60a5fa, #34d399);
+      --gradient-border: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.4));
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --code-bg: #030712;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 32px 16px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), 0 0 30px rgba(59, 130, 246, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.4), 0 0 40px rgba(168, 85, 247, 0.3);
+      }
+    }
+
+    @keyframes floatHeader {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Header Styling */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 20px;
+      padding: 36px 28px;
+      margin-bottom: 28px;
+      animation: fadeInUp 0.6s ease-out forwards, floatHeader 6s ease-in-out infinite 0.6s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-main);
+    }
+
+    .text-gradient {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h1 i {
+      color: var(--purple-neon);
+      -webkit-text-fill-color: initial;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Card Section Styling */
+    .card {
+      background-color: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+      position: relative;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.4s; }
+    .card:nth-child(4) { animation-delay: 0.6s; }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 15px 35px -10px rgba(168, 85, 247, 0.25), 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+    }
+
+    h2 i {
+      color: var(--cyan-green-neon);
+    }
+
+    ol, ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      color: #cbd5e1;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    li:hover {
+      transform: translateX(4px);
+      color: var(--text-main);
+    }
+
+    li b {
+      color: #e2e8f0;
+    }
+
+    /* Keyboard Badge / Inline Code */
+    code {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
+      color: #38bdf8;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88em;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    code:hover {
+      border-color: var(--cyan-green-neon);
+      color: #34d399;
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Terminal Box Styling */
+    .terminal-box {
+      background-color: var(--code-bg);
+      border-radius: 14px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      overflow: hidden;
+      margin-top: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.3s ease;
+    }
+
+    .terminal-box:hover {
+      border-color: var(--purple-neon);
+    }
+
+    .terminal-header {
+      background-color: rgba(15, 23, 42, 0.95);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-red { background-color: #ef4444; }
+    .dot-yellow { background-color: #f59e0b; }
+    .dot-green { background-color: #10b981; }
+
+    .terminal-title {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-family: 'Fira Code', monospace;
+      margin-left: 8px;
+    }
+
+    pre {
+      color: #a7f3d0;
+      padding: 18px 22px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      line-height: 1.7;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background-color: var(--cyan-green-neon);
+      vertical-align: middle;
+      animation: blinkCursor 1s infinite;
+      margin-left: 4px;
+    }
+
+    /* Form & Inputs */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background-color: rgba(9, 13, 22, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--purple-neon);
+      background-color: rgba(9, 13, 22, 0.95);
+      box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2), 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    button[type="submit"] {
+      background: var(--gradient-main);
+      background-size: 200% auto;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button[type="submit"]:hover {
+      background-position: right center;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4), 0 0 15px rgba(168, 85, 247, 0.5);
+    }
+
+    button[type="submit"]:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    #status {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      display: none;
+      animation: fadeInUp 0.3s ease-out forwards;
+    }
+
+    #status.info {
+      display: block;
+      background: rgba(234, 179, 8, 0.15);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.4);
+    }
+
+    #status.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+
+    #status.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    /* Comments List */
+    .komentar-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .komentar-item {
+      background-color: rgba(9, 13, 22, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px 20px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .komentar-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--gradient-main);
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    .komentar-item:hover {
+      transform: translateX(6px);
+      background-color: rgba(15, 23, 42, 0.85);
+      border-color: rgba(168, 85, 247, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .komentar-item:hover::before {
+      opacity: 1;
+    }
+
+    .komentar-item b {
+      color: var(--cyan-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .komentar-item b i {
+      color: var(--purple-neon);
+    }
+
+    .komentar-item span {
+      color: #cbd5e1;
+      font-size: 0.92rem;
+      white-space: pre-line;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out 0.8s forwards;
+    }
+  </style>
 </head>
 <body>
 
-  <header>
-    <h1>Tutorial Praktik TKJ: File Manajemen Windows</h1>
-    <p>Panduan mengelola folder dan berkas melalui File Explorer (GUI) dan Command Prompt (CLI).</p>
-    <hr>
-  </header>
+  <div class="container">
+    <header>
+      <h1><i class="fa-solid fa-folder-tree"></i> <span class="text-gradient">Tutorial Praktik TKJ: File Manajemen Windows</span></h1>
+      <p>Panduan interaktif mengelola folder dan berkas melalui File Explorer (GUI) & Command Prompt (CLI).</p>
+    </header>
 
-  <section>
-    <h2>1. File Manajemen Menggunakan File Explorer (GUI)</h2>
-    <ol>
-      <li>Tekan tombol <b>Windows + E</b> untuk membuka jendela <b>File Explorer</b>.</li>
-      <li>Pilih drive penyimpanan (misalnya <b>Local Disk (D:)</b>).</li>
-      <li>Tekan <b>Ctrl + Shift + N</b> untuk membuat folder baru, lalu beri nama <code>Praktik_TKJ</code>.</li>
-      <li>Gunakan pintasan keyboard berikut untuk mengelola file:</li>
-    </ol>
-    <ul>
-      <li><code>Ctrl + C</code> : Menyalin (Copy) file atau folder.</li>
-      <li><code>Ctrl + X</code> : Memindahkan (Cut) file atau folder.</li>
-      <li><code>Ctrl + V</code> : Menempelkan (Paste) hasil salinan/pindahan.</li>
-      <li><code>F2</code> : Mengubah nama (Rename) file atau folder.</li>
-      <li><code>Delete</code> : Menghapus file atau folder ke Recycle Bin.</li>
-    </ul>
-  </section>
+    <section class="card">
+      <h2><i class="fa-solid fa-desktop"></i> <span class="text-gradient">1. File Manajemen Menggunakan File Explorer (GUI)</span></h2>
+      <ol>
+        <li>Tekan tombol <b>Windows + E</b> untuk membuka jendela <b>File Explorer</b>.</li>
+        <li>Pilih drive penyimpanan (misalnya <b>Local Disk (D:)</b>).</li>
+        <li>Tekan <b>Ctrl + Shift + N</b> untuk membuat folder baru, lalu beri nama <code>Praktik_TKJ</code>.</li>
+        <li>Gunakan pintasan keyboard berikut untuk mengelola file:</li>
+      </ol>
+      <ul>
+        <li><code>Ctrl + C</code> : Menyalin (Copy) file atau folder.</li>
+        <li><code>Ctrl + X</code> : Memindahkan (Cut) file atau folder.</li>
+        <li><code>Ctrl + V</code> : Menempelkan (Paste) hasil salinan/pindahan.</li>
+        <li><code>F2</code> : Mengubah nama (Rename) file atau folder.</li>
+        <li><code>Delete</code> : Menghapus file atau folder ke Recycle Bin.</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>2. File Manajemen Menggunakan Command Prompt (CLI)</h2>
-    <p>Buka <b>CMD</b> (Windows + R -> ketik <code>cmd</code>), lalu gunakan perintah dasar berikut:</p>
-    <pre>
-D:                        (Pindah ke drive D)
+    <section class="card">
+      <h2><i class="fa-solid fa-terminal"></i> <span class="text-gradient">2. File Manajemen Menggunakan Command Prompt (CLI)</span></h2>
+      <p style="margin-bottom: 12px; color: #cbd5e1;">Buka <b>CMD</b> (Windows + R &rarr; ketik <code>cmd</code>), lalu gunakan perintah dasar berikut:</p>
+      
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="terminal-title">Command Prompt - C:\Windows\system32\cmd.exe</span>
+        </div>
+        <pre>D:                        (Pindah ke drive D)
 mkdir Praktik_TKJ         (Membuat folder baru bernama Praktik_TKJ)
 cd Praktik_TKJ            (Masuk ke dalam folder Praktik_TKJ)
 dir                       (Menampilkan daftar isi folder)
 copy tugas.txt backup.txt (Menyalin file tugas.txt menjadi backup.txt)
 del backup.txt            (Menghapus file backup.txt)
 cd ..                     (Kembali ke folder sebelumnya)
-rmdir Praktik_TKJ         (Menghapus folder kosong)
-    </pre>
-  </section>
+rmdir Praktik_TKJ         (Menghapus folder kosong)<span class="cursor-blink"></span></pre>
+      </div>
+    </section>
 
-  <hr>
+    <section class="card">
+      <h2><i class="fa-solid fa-comments"></i> <span class="text-gradient">Form Pertanyaan / Komentar</span></h2>
+      <form id="formKomentar">
+        <div class="form-group">
+          <label for="nama">Nama Siswa:</label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+        </div>
+        <div class="form-group">
+          <label for="pesan">Pertanyaan / Catatan:</label>
+          <textarea id="pesan" rows="3" placeholder="Tulis pertanyaan atau catatan kamu di sini..." required></textarea>
+        </div>
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> Kirim Komentar</button>
+      </form>
+      <div id="status"></div>
 
-  <section>
-    <h2>Form Pertanyaan / Komentar</h2>
-    <form id="formKomentar">
-      <label>Nama Siswa:</label><br>
-      <input type="text" id="nama" placeholder="Masukkan nama" required><br><br>
-      <label>Pertanyaan / Catatan:</label><br>
-      <textarea id="pesan" rows="3" placeholder="Tulis pertanyaan..." required></textarea><br><br>
-      <button type="submit">Kirim</button>
-    </form>
-    <p id="status"></p>
+      <h3 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-list-ul" style="color: var(--cyan-light);"></i> Daftar Komentar Masuk:
+      </h3>
+      <ul id="daftarKomentar" class="komentar-list">
+        <li class="komentar-item"><span>Memuat komentar...</span></li>
+      </ul>
+    </section>
 
-    <h3>Daftar Komentar Masuk:</h3>
-    <ul id="daftarKomentar">
-      <li>Memuat komentar...</li>
-    </ul>
-  </section>
-
-  <footer>
-    <hr>
-    <p>&copy; 2026 Modul Praktik TKJ</p>
-  </footer>
+    <footer>
+      <p>&copy; 2026 Modul Praktik TKJ &bull; All Rights Reserved</p>
+    </footer>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -78,32 +530,58 @@ rmdir Praktik_TKJ         (Menghapus folder kosong)
       const daftarEl = document.getElementById('daftarKomentar');
       const { data, error } = await db.from('komentar').select('*').order('id', { ascending: false });
 
-      if (error) { daftarEl.innerHTML = '<li>Error: ' + error.message + '</li>'; return; }
-      if (data.length === 0) { daftarEl.innerHTML = '<li>Belum ada komentar.</li>'; return; }
+      if (error) { 
+        daftarEl.innerHTML = `<li class="komentar-item" style="border-color: rgba(239, 68, 68, 0.4);"><span>Error: ${error.message}</span></li>`; 
+        return; 
+      }
+      if (!data || data.length === 0) { 
+        daftarEl.innerHTML = `<li class="komentar-item"><span>Belum ada komentar.</span></li>`; 
+        return; 
+      }
 
       daftarEl.innerHTML = '';
       data.forEach(item => {
         const li = document.createElement('li');
-        li.innerHTML = `<b>${item.nama}</b>: ${item.pesan}`;
+        li.className = 'komentar-item';
+        li.innerHTML = `<b><i class="fa-solid fa-user-astronaut"></i> ${escapeHtml(item.nama)}</b><span>${escapeHtml(item.pesan)}</span>`;
         daftarEl.appendChild(li);
       });
     }
 
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     document.getElementById('formKomentar').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const namaInput = document.getElementById('nama').value;
-      const pesanInput = document.getElementById('pesan').value;
-      const statusTeks = document.getElementById('status');
+      const namaInput = document.getElementById('nama').value.trim();
+      const pesanInput = document.getElementById('pesan').value.trim();
+      const statusEl = document.getElementById('status');
 
-      statusTeks.innerText = "Mengirim data...";
+      statusEl.className = 'info';
+      statusEl.innerText = "Mengirim data...";
+
       const { error } = await db.from('komentar').insert([{ nama: namaInput, pesan: pesanInput }]);
 
       if (error) {
-        statusTeks.innerText = "Gagal mengirim: " + error.message;
+        statusEl.className = 'error';
+        statusEl.innerText = "Gagal mengirim: " + error.message;
       } else {
-        statusTeks.innerText = "Berhasil! Komentar tersimpan.";
+        statusEl.className = 'success';
+        statusEl.innerText = "Berhasil! Komentar tersimpan.";
         document.getElementById('formKomentar').reset();
         muatKomentar();
+        
+        setTimeout(() => {
+          statusEl.className = '';
+          statusEl.style.display = 'none';
+        }, 4000);
       }
     });
 
@@ -111,4 +589,4 @@ rmdir Praktik_TKJ         (Menghapus folder kosong)
   </script>
 
 </body>
-      </html>
+</html>
